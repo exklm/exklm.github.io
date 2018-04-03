@@ -23,15 +23,19 @@
 					<h4 style="margin-left: 0;">Catalog</h4>
 
 					<a href="#">/home/</a>
+					<a href="#" class="sublink-1">small-ideas/</a>
 					<a href="#" class="sublink-1">distributed/</a>
+					<a href="#" class="sublink-1">db/</a>
 					<a href="#" class="sublink-1">data/</a>
 					<a href="#" class="sublink-1">devops/</a>
+					<a href="#" class="sublink-1">chaos/</a>
 					</br>
 
 					<a href="#">/opt/</a>
 					<a href="#" class="sublink-1">Golang/</a>
 					<a href="#" class="sublink-1">Kubernetes/</a>
 					<a href="#" class="sublink-1">Beam/</a>
+					<a href="#" class="sublink-1">PostgreSQL/</a>
 					</br>
 
 					<a href="#">/dev/null</a>
@@ -40,45 +44,7 @@
 					<a href="#">ls -alF</a>
 				</nav>
 				<div class="col-sm-12 col-md-8 col-lg-9" style="padding-left: 1rem;">
-					<img src="https://iqm7l1pa7bn3d42rc278rat5-wpengine.netdna-ssl.com/wp-content/themes/citizens-band/images/post/default@2x.jpg"/>
-					<p> This is a paragraph <strong>and</strong> something <em>else</em>.</p>
-					<p> This is a <a href="#">link to something</a>.</p>
-					<p>
-					This is normal text.
-					</br>
-					This is <small>small text</small>.
-					</br>
-					This is <sub>subscript</sub>.
-					</br>
-					This is <sup>superscript</sup>.
-					</p>
-					<p> More importantly, this is <code>inline code</code></p>
-					<code>inline code</code>
-					<pre class="command-line language-bash" data-user="mark" data-host="localhost"><code class="language-">
-echo "abc"
-echo "xyz"
-					</code></pre>
-					<blockquote cite="www.example.com">Hello worl!</blockquote>
-					<pre class="line-numbers" style="white-space:pre-wrap;"><code class="language-go">
-// SELECT * FROM users WHERE id = "abc";
-a, err := http.DefaultClient.Do(req) // https://google.com
-if err != nil {
-	fmt.Println("abc")
-}
-defer a.Close()
-					</code></pre>
-					<ul>
-						<li>Golang</li>
-						<ul>
-								<li>Rust</li>
-						</ul>
-						<li>SQL</li>
-					</ul>
-					<ol>
-						<li>Golang</li>
-						<li>Rust</li>
-						<li>SQL</li>
-					</ol>
+					{{.HTML}}
 				</div>
 				<div class="col-lg-1"></div>
 			</div>
