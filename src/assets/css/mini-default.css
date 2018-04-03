@@ -148,7 +148,7 @@ code, kbd, pre, samp {
 
 code {
   border-radius: 0.125rem;
-  background: #e6e6e6;
+  /* background: #e6e6e6; */ /* handled by prism */
   padding: 0.125rem 0.25rem;
 }
 
