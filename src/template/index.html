@@ -3,13 +3,13 @@
 	<head>
 		<meta charset="utf-8"/>
 		<meta name="viewport" content="width=device-width,initial-scale=1"/>
-		<title>bitsgofer</title>
-		<link rel="stylesheet" href="assets/css/mini.min.css"/>
-		<link rel="stylesheet" href="assets/css/prism.min.css"/>
+		<title>{{.Title}} | bitsgofer</title>
+		<link rel="stylesheet" href="/assets/css/mini.min.css"/>
+		<link rel="stylesheet" href="/assets/css/prism.min.css"/>
 	</head>
 	<body>
 		<header class="sticky">
-			<a href="#" class="logo">exklm</a>
+			<a href="#" class="logo">>_</a>
 			<button>Home</button>
 			<span>|</span>
 			<button>About</button>
@@ -22,13 +22,14 @@
 					<a href="#"><h4 style="margin-left: 0;">Hello, world!</h4></a>
 					<h4 style="margin-left: 0;">Catalog</h4>
 
+					<!--
 					<a href="#">/home/</a>
 					<a href="#" class="sublink-1">small-ideas/</a>
+					<a href="#" class="sublink-1">cs-basics/</a>
 					<a href="#" class="sublink-1">distributed/</a>
-					<a href="#" class="sublink-1">db/</a>
 					<a href="#" class="sublink-1">data/</a>
-					<a href="#" class="sublink-1">devops/</a>
-					<a href="#" class="sublink-1">chaos/</a>
+					<a href="#" class="sublink-1">bookshelf/</a>
+					<a href="#" class="sublink-1">others/</a>
 					</br>
 
 					<a href="#">/opt/</a>
@@ -37,23 +38,33 @@
 					<a href="#" class="sublink-1">Beam/</a>
 					<a href="#" class="sublink-1">PostgreSQL/</a>
 					</br>
-
-					<a href="#">/dev/null</a>
-					</br>
+					-->
 
 					<a href="#">ls -alF</a>
 				</nav>
 				<div class="col-sm-12 col-md-8 col-lg-9" style="padding-left: 1rem;">
-					{{.HTML}}
+					<main>
+						<div class="row">
+							<div class="col-sm-12">
+								<a href="#"><h1>{{.Title}}</h1></a>
+								<p>Modified: {{.ModifiedOn}}</p>
+							</div>
+						</div>
+						<div class="row">
+							<article>
+								<div>{{.Content}}</div>
+							</article>
+						</div>
+					</main>
 				</div>
 				<div class="col-lg-1"></div>
 			</div>
 		</div>
 
 		<footer>
-			<p> Hello world!</p>
+			<p>Created using <a href="https://minicss.org">minicss</a> and <a href="http://prismjs.com">prism.js</a></p>
 		</footer>
 
-		<script type="text/javascript" src="assets/js/site.min.js"></script>
+		<script type="text/javascript" src="/assets/js/site.min.js"></script>
 	</body>
 </html>

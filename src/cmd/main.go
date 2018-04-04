@@ -23,11 +23,12 @@ func main() {
 	// read markdown posts
 	// 	-> convert / transpile to HTML
 	// generate other pages + index pages
-	post, err := core.ParsePost(*postFile)
+	src, err := core.ParsePost(*postFile)
 	if err != nil {
-		log.Fatalf("cannot parse post; err= %v", err)
+		log.Fatalf("cannot parse src; err= %v", err)
 	}
-	if err := post.Convert(); err != nil {
+	post, err := src.Convert()
+	if err != nil {
 		log.Fatalf("cannot convert; err= %v", err)
 	}
 

@@ -9,7 +9,7 @@ _prism_css=prism-tomorrow-night.css
 
 endif
 
-all: assets content
+all: minify.assets minify.content
 
 clean:
 	rm -rf \
@@ -23,7 +23,7 @@ clean:
 		index.html
 .PHONY: clean
 
-assets:
+minify.assets:
 	docker run --rm -v $(shell pwd):$(shell pwd) -w $(shell pwd) exklm/postcss \
 		-m \
 		-u autoprefixer \
@@ -40,15 +40,24 @@ assets:
 		--js_output_file assets/js/site.min.js \
 		--js \
 		src/assets/js/${_prism_js} > /dev/null 2>&1
-.PHONY: assets
+.PHONY: minify.assets
 
-content:
+generate.content:
+	for file in `ls _posts/`; do go run src/cmd/main.go --template src/template/index.html --post _posts/$$file > posts/`basename $$file .md`.html; done
+.PHONY: generate.content
+
+
+minify.content: _tmp=.tmp
+minify.content:
+	mkdir -p $(_tmp)
+	cp index.html ${_tmp}/
 	docker run --rm -v $(shell pwd):$(shell pwd) -w $(shell pwd) exklm/html-minifier \
 		-o index.html \
 		--remove-comments \
 		--collapse-whitespace \
-		src/template/index.html
-.PHONY: content
+		${_tmp}/index.html
+	rm -rf ${_tmp}
+.PHONY: minify.content
 
 fix-assets-permission:
 	sudo chown -R $(shell id -u):$(shell id -g) assets/

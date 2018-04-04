@@ -4,15 +4,23 @@ import (
 	"io/ioutil"
 	"os"
 	"regexp"
+	"strings"
+	"time"
 
 	"github.com/pkg/errors"
+	blackfriday "gopkg.in/russross/blackfriday.v2"
 )
 
 type post struct {
-	HTML     string // generated HTML
-	markdown []byte // original markdown (might have mixed HTML)
-	file     string
+	file   string
+	source []byte
 	os.FileInfo
+}
+
+type Post struct {
+	Content    string
+	Title      string
+	ModifiedOn string
 }
 
 func ParsePost(file string) (*post, error) {
@@ -34,8 +42,7 @@ func ParsePost(file string) (*post, error) {
 
 	res := &post{
 		file:     file,
-		markdown: b,
-		HTML:     "",
+		source:   b,
 		FileInfo: stat,
 	}
 	return res, nil
@@ -45,10 +52,13 @@ var (
 	rgH1 = regexp.MustCompile(`# (.+)`)
 )
 
-func (p *post) Convert() error {
-	// TODO: implement a proper parser & transpiler here
+func (p *post) Convert() (Post, error) {
+	// TODO(mark): implement a proper parser & transpiler here
 
-	buf := string(p.markdown)
-	p.HTML = rgH1.ReplaceAllString(buf, "<h1>$1</h1>")
-	return nil
+	return Post{
+		// TODO(mark): ensure Title is URL friendly and human-readable
+		Title:      strings.Replace(p.FileInfo.Name(), ".md", "", -1),
+		ModifiedOn: p.FileInfo.ModTime().UTC().Format(time.RFC3339),
+		Content:    string(blackfriday.Run(p.source)),
+	}, nil
 }
