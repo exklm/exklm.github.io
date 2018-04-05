@@ -43,7 +43,7 @@ minify.assets:
 .PHONY: minify.assets
 
 generate.content:
-	for file in `ls _posts/`; do go run src/cmd/main.go --template src/template/index.html --post _posts/$$file > posts/`basename $$file .md`.html; done
+	go run src/cmd/main.go --template src/template/index.html --posts-dir _posts
 .PHONY: generate.content
 
 

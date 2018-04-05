@@ -52,7 +52,7 @@ var (
 	rgH1 = regexp.MustCompile(`# (.+)`)
 )
 
-func (p *post) Convert() (Post, error) {
+func (p *post) Convert(file string) (Post, error) {
 	// TODO(mark): implement a proper parser & transpiler here
 
 	return Post{

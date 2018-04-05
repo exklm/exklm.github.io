@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width,initial-scale=1"/>
+		<title>schemaSpy | bitsgofer</title>
+		<link rel="stylesheet" href="/assets/css/mini.min.css"/>
+		<link rel="stylesheet" href="/assets/css/prism.min.css"/>
+	</head>
+	<body>
+		<header class="sticky">
+			<a href="#" class="logo">>_</a>
+			<button>Home</button>
+			<span>|</span>
+			<button>About</button>
+		</header>
+
+
+		<div class="container" style="padding-left: 0.5rem; padding-top: 0.5rem;">
+			<div class="row">
+				<nav class="drawer col-md-4 col-lg-2">
+					<a href="#"><h4 style="margin-left: 0;">Hello, world!</h4></a>
+					<h4 style="margin-left: 0;">Catalog</h4>
+
+					<!--
+					<a href="#">/home/</a>
+					<a href="#" class="sublink-1">small-ideas/</a>
+					<a href="#" class="sublink-1">cs-basics/</a>
+					<a href="#" class="sublink-1">distributed/</a>
+					<a href="#" class="sublink-1">data/</a>
+					<a href="#" class="sublink-1">bookshelf/</a>
+					<a href="#" class="sublink-1">others/</a>
+					</br>
+
+					<a href="#">/opt/</a>
+					<a href="#" class="sublink-1">Golang/</a>
+					<a href="#" class="sublink-1">Kubernetes/</a>
+					<a href="#" class="sublink-1">Beam/</a>
+					<a href="#" class="sublink-1">PostgreSQL/</a>
+					</br>
+					-->
+
+					<a href="#">ls -alF</a>
+				</nav>
+				<div class="col-sm-12 col-md-8 col-lg-9" style="padding-left: 1rem;">
+					<main>
+						<div class="row">
+							<div class="col-sm-12">
+								<a href="#"><h1>schemaSpy</h1></a>
+								<p>Modified: 2018-04-05T15:49:08Z</p>
+							</div>
+						</div>
+						<div class="row">
+							<article>
+								<div><hr />
+
+<p>title:  &ldquo;your db design at a glance with schemaSpy&rdquo;
+date:   2016-05-06 00:00:00</p>
+
+<h2>description: how to use schemaSpy to chart out the db schema &amp; how that helps with db work in general</h2>
+
+<p>When trying to grasp new projects and understand the logic behind it, looking at how data is stored
+can be incredibly helpful. In SQL, you would look at the tables, columns, constraints &amp; the
+relationships between them. This task can be quite daunting, however.</p>
+
+<p>If your projects are complex,
+it might involve looking at over 20 to 30+ tables, each with at least 10+ columns. The challenge
+are even harder on a poorly designed, non-normalized database.</p>
+
+<p>For me, <a href="http://schemaspy.sourceforge.net/">schemaSpy</a>, an open-sourced tool has proved to be an indispensable  tool
+by providing a <strong>graphical summary</strong> of tables, columns &amp; relationships
+(in the form of foreign key constraint).</p>
+
+<p>So I went from looking at text:</p>
+
+<p><a href="#" data-featherlight="/assets/images/2016-05-06-schemaSpy_text_view.png"><img src="/assets/images/2016-05-06-schemaSpy_text_view.png"/></a></p>
+
+<p>To this:</p>
+
+<p><a href="#" data-featherlight="/assets/images/2016-05-06-schemaSpy_graphical_view.png"><img src="/assets/images/2016-05-06-schemaSpy_graphical_view.png"/></a></p>
+
+<p>You can also zoom in to specific tables and look at tables related to it directly (1 degree of separation) or indirectly (2 degree of separation)</p>
+
+<p><a href="#" data-featherlight="/assets/images/2016-05-06-schemaSpy_2_degree_table.png"><img src="/assets/images/2016-05-06-schemaSpy_2_degree_table.png"/></a></p>
+
+<p>Which is a great thing to do when you want to understand what are linked together.</p>
+
+<blockquote>
+<p>our database design right now is terrifically messy :(</p>
+</blockquote>
+
+<p>There are some caveats for ORM users, however.</p>
+
+<p>For example, as ActiveRecord&rsquo;s associations are managed by the app,
+it&rsquo;s not going to show up as foreign key constraint
+(and a link between tables) on schemaSpy.
+Similarly, uniqueness and other type of constraints
+won&rsquo;t be shown if you don&rsquo;t have it in the SQL schema.</p>
+
+<h2>Install and usage</h2>
+
+<p>I work mostly with Postgres, so you can <br/> <a href="https://github.com/exklamationmark/dotfiles/tree/master/tools/schemaspy">get a cached version of schemaSpy &amp; postgres&rsquo; JDBC driver from here</a></p>
+
+<p>The most-updated version should be there on:</p>
+
+<ul>
+<li><a href="http://schemaspy.sourceforge.net/">http://schemaspy.sourceforge.net/</a></li>
+<li><a href="https://jdbc.postgresql.org/download.html">https://jdbc.postgresql.org/download.html</a></li>
+</ul>
+</div>
+							</article>
+						</div>
+					</main>
+				</div>
+				<div class="col-lg-1"></div>
+			</div>
+		</div>
+
+		<footer>
+			<p>Created using <a href="https://minicss.org">minicss</a> and <a href="http://prismjs.com">prism.js</a></p>
+		</footer>
+
+		<script type="text/javascript" src="/assets/js/site.min.js"></script>
+	</body>
+</html>

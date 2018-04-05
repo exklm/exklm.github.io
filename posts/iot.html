@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width,initial-scale=1"/>
+		<title>iot | bitsgofer</title>
+		<link rel="stylesheet" href="/assets/css/mini.min.css"/>
+		<link rel="stylesheet" href="/assets/css/prism.min.css"/>
+	</head>
+	<body>
+		<header class="sticky">
+			<a href="#" class="logo">>_</a>
+			<button>Home</button>
+			<span>|</span>
+			<button>About</button>
+		</header>
+
+
+		<div class="container" style="padding-left: 0.5rem; padding-top: 0.5rem;">
+			<div class="row">
+				<nav class="drawer col-md-4 col-lg-2">
+					<a href="#"><h4 style="margin-left: 0;">Hello, world!</h4></a>
+					<h4 style="margin-left: 0;">Catalog</h4>
+
+					<!--
+					<a href="#">/home/</a>
+					<a href="#" class="sublink-1">small-ideas/</a>
+					<a href="#" class="sublink-1">cs-basics/</a>
+					<a href="#" class="sublink-1">distributed/</a>
+					<a href="#" class="sublink-1">data/</a>
+					<a href="#" class="sublink-1">bookshelf/</a>
+					<a href="#" class="sublink-1">others/</a>
+					</br>
+
+					<a href="#">/opt/</a>
+					<a href="#" class="sublink-1">Golang/</a>
+					<a href="#" class="sublink-1">Kubernetes/</a>
+					<a href="#" class="sublink-1">Beam/</a>
+					<a href="#" class="sublink-1">PostgreSQL/</a>
+					</br>
+					-->
+
+					<a href="#">ls -alF</a>
+				</nav>
+				<div class="col-sm-12 col-md-8 col-lg-9" style="padding-left: 1rem;">
+					<main>
+						<div class="row">
+							<div class="col-sm-12">
+								<a href="#"><h1>iot</h1></a>
+								<p>Modified: 2018-04-05T16:25:25Z</p>
+							</div>
+						</div>
+						<div class="row">
+							<article>
+								<div><hr />
+
+<p>layout: post
+title: IoT platform simulation</p>
+
+<h2>tags: [IoT, fault-injection]</h2>
+
+<p>This is an on-going personal project to build a system to test IoT applications.</p>
+
+<p>Typically, IoT platorm will transfer data (from sensors) to somewhere, as well as receiving commands and perform some actions. When testing such systems, concerns are:
+- reliability: would the system malfunction if network is loss or if individual devices malfunction.
+- security: what are the attack surfaces &amp; their impact.</p>
+
+<p>These are big and intractable problems, however. My smaller plans is as followed:</p>
+
+<ul>
+<li>Get IoT nodes that run Linux</li>
+<li>Get a wireless router that run OpenWrt</li>
+<li>Get IoT nodes to connect to the network.</li>
+<li>Have an external process that can control the network (via <code>tc</code> on OpenWrt)
+and can randomly cause nodes to fault (think Jepsen)</li>
+<li>Script tests that setup something, then cause random failures</li>
+<li>Observe and analyze results (hopefully with scripts)</li>
+</ul>
+
+<p>Hopefully, with this, we can simulates IoT running on both 3G and wireless/wired setup.</p>
+
+<h2>Setup</h2>
+
+<h3>IoT nodes</h3>
+
+<ul>
+<li>2x Raspberry Pi 3 (model B)</li>
+<li>2x Raspberry Pi Zero</li>
+</ul>
+
+<p>Both models are selected because they offer Wifi chipset.
+This result in less wiring and doesn&rsquo;t require a switch, too.</p>
+
+<p>Since it&rsquo;s a bit hard to plug things into the Pi Zero (keyboard and HDMI), I needed Pi 3.
+However, one Pi 3 should have been enough. Pi Zero seems to be the best candidate for this test
+setup, since it&rsquo;s cheap and have a small physical profile.</p>
+
+<p>I tried to install a custom Ubuntu server image for ARM on them, but haven&rsquo;t managed to boot up.
+Hence, Raspbian was installed.</p>
+
+<p>After booting, the Wifi can be configured by adding this into <code>/etc/wpa_supplicant/wpa_supplicant.conf</code>:</p>
+
+<pre><code>network={
+  ssid=&quot;openwrt.network&quot;
+  psk=&quot;password&quot;
+}
+</code></pre>
+
+<p>After reboot, the Pi got their IP from the router.</p>
+
+<h3>Power supply</h3>
+
+<ul>
+<li>[Anker AH231 USB 3.0 10-Port Hub]</li>
+<li>2.0 A micro USB cable (pack of 6)</li>
+</ul>
+
+<p>Granted, this might not guarantee enough power supply for the Pi 3 (max at 2.1 A, instead of 2.5),
+but things has been working okay so far</p>
+
+<h3>Router</h3>
+
+<ul>
+<li>Router: Netgear N600 with WNDR3700v4</li>
+</ul>
+
+<p>I picked this specifically because the chipset is known to support OpenWRT well.
+Flashing a OpenWRT image on this seems easy, as the stock router provided GUI to flash itself.
+Hence, all I needed to do was downloading an image &amp; use the web UI.</p>
+
+<h3>Control node</h3>
+
+<ul>
+<li>a VM</li>
+</ul>
+</div>
+							</article>
+						</div>
+					</main>
+				</div>
+				<div class="col-lg-1"></div>
+			</div>
+		</div>
+
+		<footer>
+			<p>Created using <a href="https://minicss.org">minicss</a> and <a href="http://prismjs.com">prism.js</a></p>
+		</footer>
+
+		<script type="text/javascript" src="/assets/js/site.min.js"></script>
+	</body>
+</html>

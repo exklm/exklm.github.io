@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width,initial-scale=1"/>
+		<title>introvert | bitsgofer</title>
+		<link rel="stylesheet" href="/assets/css/mini.min.css"/>
+		<link rel="stylesheet" href="/assets/css/prism.min.css"/>
+	</head>
+	<body>
+		<header class="sticky">
+			<a href="#" class="logo">>_</a>
+			<button>Home</button>
+			<span>|</span>
+			<button>About</button>
+		</header>
+
+
+		<div class="container" style="padding-left: 0.5rem; padding-top: 0.5rem;">
+			<div class="row">
+				<nav class="drawer col-md-4 col-lg-2">
+					<a href="#"><h4 style="margin-left: 0;">Hello, world!</h4></a>
+					<h4 style="margin-left: 0;">Catalog</h4>
+
+					<!--
+					<a href="#">/home/</a>
+					<a href="#" class="sublink-1">small-ideas/</a>
+					<a href="#" class="sublink-1">cs-basics/</a>
+					<a href="#" class="sublink-1">distributed/</a>
+					<a href="#" class="sublink-1">data/</a>
+					<a href="#" class="sublink-1">bookshelf/</a>
+					<a href="#" class="sublink-1">others/</a>
+					</br>
+
+					<a href="#">/opt/</a>
+					<a href="#" class="sublink-1">Golang/</a>
+					<a href="#" class="sublink-1">Kubernetes/</a>
+					<a href="#" class="sublink-1">Beam/</a>
+					<a href="#" class="sublink-1">PostgreSQL/</a>
+					</br>
+					-->
+
+					<a href="#">ls -alF</a>
+				</nav>
+				<div class="col-sm-12 col-md-8 col-lg-9" style="padding-left: 1rem;">
+					<main>
+						<div class="row">
+							<div class="col-sm-12">
+								<a href="#"><h1>introvert</h1></a>
+								<p>Modified: 2018-04-05T16:25:05Z</p>
+							</div>
+						</div>
+						<div class="row">
+							<article>
+								<div><hr />
+
+<p>layout: post
+title: Getting buy-ins as an introvert</p>
+
+<h2>tags: [buy-ins]</h2>
+
+<p>If you are a software engineer, it&rsquo;s highly likely that you would be in situations where earlier design choices are questioned. Sometimes, as luck would have it, the conversation feels like an attack to what you decided on earlier. IMO, this indicates lack of buy-ins from other people (colleagues, management, etc).</p>
+
+<p>Buy-ins, however, are not easy to get as an introvert.</p>
+
+<h3>Identify the root cause</h3>
+
+<p>While it&rsquo;s easy to blame it on politics or people being difficult, lack of buy-ins might have deeper cause. Especially if you feel that your colleagues are reasonable human beings with good intentions.</p>
+
+<p>I would attribute the root cause to 2 things:</p>
+
+<ul>
+<li>The technical requirements are not detailed and clear enough</li>
+<li>People forget things, and sometimes invent details on their own</li>
+</ul>
+
+<p>Unclear requirements is probably the main issue. However, there&rsquo;s not much one can do about it, since most of the time we are designing solutions to new problems (to us, at least), the requirements will change as we understand things better.</p>
+
+<p>This effect is amplified when multiple people are involved in designing the solution, since &ldquo;problem cache&rdquo; are usually cleared, or worse, recreated unfaithfully after a few days.</p>
+
+<h3>Tackling it, the introvert way</h3>
+
+<p>I have seen people who are good at handling this. Usually they have a lot of energy and would be able to get people in a room, walk through decisions and end it with a positive note where everyone agrees. And they <strong>retain</strong> the session in their head, so if somebody come up and dispute, the objector&rsquo;s opinion/group concensus is quoted and things get resolved.</p>
+
+<p>This doesn&rsquo;t work for me, though, due to the amount of energy required to organize all the people-related things (which eats up the coding time). Instead, I like this approach more:</p>
+
+<ul>
+<li>Spend more time working out the design, its goal, the trade-offs and why you do so. Discussion in person if you need to.</li>
+<li>Write down the ideas you have in mind, as concrete as possible. End-to-end examples are useful here. For example, I can write:</li>
+</ul>
+
+<p>{% highlight bash %}
+the service will receive request to endpoint X with payload Y
+it should produce a response like Z
+{% endhighlight %}</p>
+
+<p>If this is a product design, you will need a convincing user story.
+Which means you need to explain why your product decision benefits the user.
+It&rsquo;s also better if you can contrast it with other possibilities/compare with existing products. For example:</p>
+
+<p>{% highlight bash %}
+We should present a line graph instead of bar graph, because the data
+to be shown are supposed to be analog in nature.</p>
+
+<p>Plus, if we observe data over a large interval, there might be
+too many points and a bar graph will look more messy&hellip;
+{% endhighlight %}</p>
+
+<p>Then, you can point dispute and discussions to the written docs.</p>
+
+<p>The caveat here are people who like to read short, <strong>tl;dr-ish</strong> description, who will skip over the docs. I haven&rsquo;t found a more effective approach than asking them to read the docs and give them a convenient URL, though.</p>
+</div>
+							</article>
+						</div>
+					</main>
+				</div>
+				<div class="col-lg-1"></div>
+			</div>
+		</div>
+
+		<footer>
+			<p>Created using <a href="https://minicss.org">minicss</a> and <a href="http://prismjs.com">prism.js</a></p>
+		</footer>
+
+		<script type="text/javascript" src="/assets/js/site.min.js"></script>
+	</body>
+</html>

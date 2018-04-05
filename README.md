@@ -25,7 +25,7 @@ Need to install
 
 - [x] Create an HTML + CSS + basic JS page for writing text + code.
 - [x] Create a CLI tool in Go for parsing mardown posts & generate its HTML, based on the template.
-- [ ] Modify CLI to generate the `ls -alF` page (list all posts)
+- [x] Modify CLI to generate the `ls -alF` page (list all posts)
 - [ ] Modify CLI to generate the category pages + post count
 - [ ] Setup build pipeline with Bazel
 - [ ] Replace the markdown package with hand-rolled parser
