@@ -65,6 +65,8 @@ fix-assets-permission:
 
 run.local:
 	docker run --name nginx --rm \
+		-v $(shell pwd)/default.conf:/etc/nginx/conf.d/default.conf:ro \
+		-v $(shell pwd)/nginx.conf:/etc/nginx/nginx.conf:ro \
 		-v $(shell pwd):/usr/share/nginx/html:ro \
 		-p 80:80 \
 		nginx:1.13.10
