@@ -33,7 +33,7 @@ func main() {
 		name := info.Name()
 		baseName := name[:len(name)-len(filepath.Ext(path))]
 		modifiedOn := info.ModTime().UTC().Format(time.RFC3339)
-		buf.WriteString("\n<a href=\"#\"><h1>")
+		buf.WriteString("\n<a href=\"/posts/" + baseName + "\"><h1>")
 		buf.WriteString(baseName)
 		buf.WriteString("</h1></a>\n")
 		buf.WriteString("<time>")
