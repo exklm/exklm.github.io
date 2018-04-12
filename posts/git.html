@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width,initial-scale=1"/>
+		<title>git | bitsgofer</title>
+		<link rel="stylesheet" href="/assets/css/mini.min.css"/>
+		<link rel="stylesheet" href="/assets/css/prism.min.css"/>
+	</head>
+	<body>
+		<header class="sticky">
+			<a href="#" class="logo">>_</a>
+			<a href="/"><button>HOME</button></a>
+			<span>|</span>
+			<a href="/about"><button>About</button></a>
+		</header>
+
+
+		<div class="container" style="padding-left: 0.5rem; padding-top: 0.5rem;">
+			<div class="row">
+				<nav class="drawer col-md-4 col-lg-2">
+					<a href="#"><h4 style="margin-left: 0;">Hello, world!</h4></a>
+					<h4 style="margin-left: 0;">Catalog</h4>
+
+					<!--
+					<a href="#">/home/</a>
+					<a href="#" class="sublink-1">small-ideas/</a>
+					<a href="#" class="sublink-1">cs-basics/</a>
+					<a href="#" class="sublink-1">distributed/</a>
+					<a href="#" class="sublink-1">data/</a>
+					<a href="#" class="sublink-1">bookshelf/</a>
+					<a href="#" class="sublink-1">others/</a>
+					</br>
+
+					<a href="#">/opt/</a>
+					<a href="#" class="sublink-1">Golang/</a>
+					<a href="#" class="sublink-1">Kubernetes/</a>
+					<a href="#" class="sublink-1">Beam/</a>
+					<a href="#" class="sublink-1">PostgreSQL/</a>
+					</br>
+					-->
+
+					<a href="#">ls -alF</a>
+				</nav>
+				<div class="col-sm-12 col-md-8 col-lg-9" style="padding-left: 1rem;">
+					<main>
+						<div class="row">
+							<div class="col-sm-12">
+								<a href="#"><h1>git</h1></a>
+								<p>Modified: 2018-04-05T16:27:10Z</p>
+							</div>
+						</div>
+						<div class="row">
+							<article>
+								<div><hr />
+
+<p>title:  &ldquo;A lightweight release model with git and docker&rdquo;
+date:   2016-04-07 00:00:00</p>
+
+<h2>description: keeping track of what&rsquo;s released without too much crappy process</h2>
+
+<blockquote>
+<p>This is a personal blog. All opinions (and stupidity) are my own. <br/>
+They do not represent thoughts and strategies of my employer.</p>
+</blockquote>
+
+<p>In this blog post, I would like to talk about a branching/release model at Viki for
+our backend services. It allows for moderate tracking of what has been released, while trying to
+stay the heck out of everyone&rsquo;s workflow.</p>
+
+<h2>Context</h2>
+
+<p>This is what we are using at Viki for source control:</p>
+
+<ul>
+<li><strong>git</strong> for code</li>
+<li><strong>github.com</strong> for hosting code</li>
+<li><strong>hub.docker.com</strong> for hosting, err&hellip; docker images</li>
+</ul>
+
+<p><br/>
+We then deploy docker images with built-in source code to the servers.</p>
+
+<h2>Guidelines</h2>
+
+<blockquote>
+<p><strong>commit on master is safe</strong> <br/>
+<strong>once deployed, considered gone (no live changes)</strong></p>
+</blockquote>
+
+<p>This made debugging and rolling back bad changes a lot easier.</p>
+
+<p>There are still emergencies that require you to go cowboy mode &amp; debug live on the server.
+But we try to avoid these as much as we can, and commit changes as a hot fix.</p>
+
+<hr/>
+
+<h2>Source control</h2>
+
+<p>We have micro-services, so the repos never get really big. Git works fine here.</p>
+
+<p>The branch model we have is a simplified version of
+<a href="http://nvie.com/posts/a-successful-git-branching-model/">this workflow</a>, as we try not to
+enforce too many process.</p>
+
+<p><a href="#" data-featherlight="/assets/images/2016-04-07-lightweight-release-model-with-git-and-docker_git_branching_model.png"><img src="/assets/images/2016-04-07-lightweight-release-model-with-git-and-docker_git_branching_model.png"/></a></p>
+
+<p>The only requirements are:</p>
+
+<blockquote>
+<p><strong>Plan for releases on a branch</strong> <br/>
+<strong>Squash feature branches before RC merge</strong> <br/>
+This helps us to track what changed easily and encourage commiters to group
+related changes together (less low-effort &ldquo;update&rdquo;, &ldquo;fixes&rdquo; commit) <br/>
+<strong>Master branch is protected, only project owner can merge</strong> <br/>
+This encourage owners to review code and be more aware about their projects
+(in case of emergency, our devops can still merge and release).</p>
+</blockquote>
+
+<p>We use github&rsquo;s <strong>protected branches</strong> feature, which benefits us in 2 ways:</p>
+
+<ul>
+<li>Only commits that passed <a href="https://drone.io/">drone</a> (our CI tool) tests can be deployed (assuming we put decent amount of tests in the drone build)</li>
+<li>Project owner are aware of what gets released</li>
+</ul>
+
+<p><br/>
+<a href="#" data-featherlight="/assets/images/2016-04-07-lightweight-release-model-with-git-and-docker_github_protected_branch.png"><img src="/assets/images/2016-04-07-lightweight-release-model-with-git-and-docker_github_protected_branch.png" /></a></p>
+
+<hr/>
+
+<h2>Docker image control</h2>
+
+<p>We set up <strong>drone</strong> so that it builds a new docker for every commits, which is named as <code>org/service:git-hash</code></p>
+
+<p>We then deploy this image onto server, and (almost) never change the code for it.</p>
+
+<hr/>
+
+<h2>Useful things</h2>
+
+<blockquote>
+<p><strong>git add -patch</strong> <br/>
+very useful if you need to separate changes in a single file to smaller commits</p>
+</blockquote>
+</div>
+							</article>
+						</div>
+					</main>
+				</div>
+				<div class="col-lg-1"></div>
+			</div>
+		</div>
+
+		<footer>
+			<p>Created using <a href="https://minicss.org">minicss</a> and <a href="http://prismjs.com">prism.js</a></p>
+		</footer>
+
+		<script type="text/javascript" src="/assets/js/site.min.js"></script>
+	</body>
+</html>

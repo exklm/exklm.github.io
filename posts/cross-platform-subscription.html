@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width,initial-scale=1"/>
+		<title>cross-platform-subscription | bitsgofer</title>
+		<link rel="stylesheet" href="/assets/css/mini.min.css"/>
+		<link rel="stylesheet" href="/assets/css/prism.min.css"/>
+	</head>
+	<body>
+		<header class="sticky">
+			<a href="#" class="logo">>_</a>
+			<a href="/"><button>HOME</button></a>
+			<span>|</span>
+			<a href="/about"><button>About</button></a>
+		</header>
+
+
+		<div class="container" style="padding-left: 0.5rem; padding-top: 0.5rem;">
+			<div class="row">
+				<nav class="drawer col-md-4 col-lg-2">
+					<a href="#"><h4 style="margin-left: 0;">Hello, world!</h4></a>
+					<h4 style="margin-left: 0;">Catalog</h4>
+
+					<!--
+					<a href="#">/home/</a>
+					<a href="#" class="sublink-1">small-ideas/</a>
+					<a href="#" class="sublink-1">cs-basics/</a>
+					<a href="#" class="sublink-1">distributed/</a>
+					<a href="#" class="sublink-1">data/</a>
+					<a href="#" class="sublink-1">bookshelf/</a>
+					<a href="#" class="sublink-1">others/</a>
+					</br>
+
+					<a href="#">/opt/</a>
+					<a href="#" class="sublink-1">Golang/</a>
+					<a href="#" class="sublink-1">Kubernetes/</a>
+					<a href="#" class="sublink-1">Beam/</a>
+					<a href="#" class="sublink-1">PostgreSQL/</a>
+					</br>
+					-->
+
+					<a href="#">ls -alF</a>
+				</nav>
+				<div class="col-sm-12 col-md-8 col-lg-9" style="padding-left: 1rem;">
+					<main>
+						<div class="row">
+							<div class="col-sm-12">
+								<a href="#"><h1>cross-platform-subscription</h1></a>
+								<p>Modified: 2018-04-05T16:23:27Z</p>
+							</div>
+						</div>
+						<div class="row">
+							<article>
+								<div><hr />
+
+<p>title:  &ldquo;Building cross-platform subscription&rdquo;
+date:   2016-06-22 00:00:00</p>
+
+<h2>description: Working with 3rd party subscription engine (Android)</h2>
+
+<p>As part of offering better subscription experience, my company decided to
+launch a new subscription engine in early 2016. It was supposed to unify subscription services
+we had in Stripe, iTunes and Android Play. This series tell the story of how this happened,
+and our choices/lesson.</p>
+
+<p>In particular, this post is about building a fundamental block for cross-platform subscription
+logic on top of Google Play&rsquo;s subscription engine.</p>
+
+<blockquote>
+<p>Jun 2016: this is work in progress, the approach seems good, so we are starting with implementation</p>
+</blockquote>
+
+<h1>System overview</h1>
+
+<p>We can roughly break the unified subscription engine into logical parts like this:</p>
+
+<p><a href="#" data-featherlight="/assets/images/2016-05-22-building_cross_platform_subscription.png"><img src="/assets/images/2016-05-22-building_cross_platform_subscription.png"/></a></p>
+
+<p>We moved subscription logic from Stripe to in-house as a separate system.
+After that, there is another logic layer that pulls data from both this web subscription engine,
+as well as Android and iOS&rsquo;s. The data is then fed to a database, which is picked up by our public
+Web API and analytics pipeline. Finally, user-facing features from web/mobile clients,
+customer support portal,&hellip; make use of data from the Web API.</p>
+
+<p>To completely offer cross-platform subscription capability, we need a better way to capture and
+synchronize subscription status. This is basically capturing states and transitions in a user&rsquo;s
+subscription, such as: <strong>trial</strong>, <strong>paying</strong>, <strong>grace</strong> (wait and retry after failed charge), <strong>ended</strong>.</p>
+
+<h1>Challenges</h1>
+
+<p>The main challenges to create a cross-platform subscription system on top of Android&rsquo;s subscription
+involves 2 things:</p>
+
+<ul>
+<li>Figuring out she undocumented (and unofficial) life cycle of the subscription from Google.</li>
+<li>Getting an accurate reading of subscription states from Google.</li>
+</ul>
+
+<p>Let&rsquo;s go over each problem in more details:</p>
+
+<h2>State of Google subscription</h2>
+
+<p>If you subscribe on Android, your subscription is managed by Google&rsquo;s billing engine.
+However, this engine only allow you to pull the subscription&rsquo;s current state.
+For example, after subscribing, you can use Android SDK or Google&rsquo;s publisher API
+to know the start and end time of the subscription, from which you can tell whether the user
+is currently a subscriber or not.</p>
+
+<p>This works well enough for apps that only run on Android, but once you go cross-platform, there&rsquo;s
+a need to know about state and state transitions of the Android subscription.
+Sadly, there is no call-back mechanism from Google to tell you when things changes, so even
+simple things like notifying failed payment, renewal and tracking historical changes becomes hard.</p>
+
+<p>At the same time, not all user-action on the subscription goes through the mobile.
+So we can&rsquo;t rely on our clients to send us state change events either.
+For example, you can cancel the subscription in iTunes or Google Play store.</p>
+
+<h2>Getting accurate reading on Google&rsquo;s subscription state</h2>
+
+<p>Luckily, after poking around, we found a deterministic pattern of Android subscription&rsquo;s states.
+With that, we decided to sample the subscription at various point in time,
+checking with previous samples to then infer the current state of the subscription.
+Though this model is undocumented, it (hopefully) won&rsquo;t change any time soon.</p>
+
+<p>The next problem comes with the act of sampling. It&rsquo;s possible to miss out changes if we don&rsquo;t
+sample at small enough intervals. Furthermore, sampling large number of subscription presents
+the problem of rate-limiting and speed.</p>
+
+<p>Finally, we found out that Google tends to run their subscriptions in batches, which create some
+differences in subscription time. For example, a subscription starting at 1458092602407 (ms) UTC,
+with 7 days of trial and 1 month in duration will not end at exactly 1461375802407, but might end
+around 1461386605058, due to the batch job being ran later. The difference is usually within
+1 day, which is fine from user perspective, but would make some calculations harder.</p>
+
+<p><a href="#" data-featherlight="/assets/images/2016-05-22-building_cross_platform_subscription_sample_google_sub_bad_date.png"><img src="/assets/images/2016-05-22-building_cross_platform_subscription_sample_google_sub_bad_date.png"/></a></p>
+
+<h1>Approach</h1>
+
+<h2>Sampling data</h2>
+
+<p>We call Android Publisher API to get something like this:</p>
+
+<p>{% highlight bash %}
+$&gt; curl -sX GET &lsquo;<a href="https://www.googleapis.com/androidpublisher/v2/applications/com.viki.android/purchases/subscriptions/com.viki.vikipass.subscription.1month/tokens/userPurchaseToken?access_token=oauthToken'">https://www.googleapis.com/androidpublisher/v2/applications/com.viki.android/purchases/subscriptions/com.viki.vikipass.subscription.1month/tokens/userPurchaseToken?access_token=oauthToken&rsquo;</a>
+{
+ &ldquo;kind&rdquo;: &ldquo;androidpublisher#subscriptionPurchase&rdquo;,
+ &ldquo;startTimeMillis&rdquo;: &ldquo;1458092602407&rdquo;,
+ &ldquo;expiryTimeMillis&rdquo;: &ldquo;1469245392749&rdquo;,
+ &ldquo;autoRenewing&rdquo;: true,
+ &ldquo;priceCurrencyCode&rdquo;: &ldquo;USD&rdquo;,
+ &ldquo;priceAmountMicros&rdquo;: &ldquo;4380000&rdquo;,
+ &ldquo;countryCode&rdquo;: &ldquo;US&rdquo;,
+ &ldquo;developerPayload&rdquo;: &ldquo;&rdquo;,
+ &ldquo;paymentState&rdquo;: 1
+}
+{% endhighlight %}</p>
+
+<p>When the Android subscription change states, the <code>expiryTimeMillis</code> value returned
+from the sample call changes. By compare it with previous values, taking into account the
+inaccuracy caused by the batch job, you can track what state it is in.</p>
+
+<h2>Android subscription&rsquo;s life cycle</h2>
+
+<p>There are <strong>5 different (1 dummy &amp; 4 real) states</strong> that an Android subscription goes through:</p>
+
+<ul>
+<li><strong>empty</strong>     : dummy state, this is before the subscription is created</li>
+<li><strong>trial</strong>     : when in-app subscription offer trial, and the user is getting it for the first time</li>
+<li><strong>subscribed</strong>  : paying for benefits</li>
+<li><strong>grace</strong>     : tried to pay earlier, but payment failed. However, it&rsquo;s still within a duration where we retry the payment</li>
+<li><strong>ended</strong>     : ended by user action or because of failed payment</li>
+</ul>
+
+<p>The state transitions that can happen are:</p>
+
+<ul>
+<li><strong>empty -&gt; in_trial</strong>         : this happen when user subscribe to an in-app product for the first time</li>
+<li><strong>empty -&gt; subscribed</strong>       : if user re-subscribed to an in-app product, they don&rsquo;t get the trial</li>
+<li><strong>trial -&gt; ended</strong>            : user can cancel their subscription during trial</li>
+<li><strong>trial -&gt; grace</strong>            : the first charge after trial fail, the user go into grace period with multiple retry on charge</li>
+<li><strong>trial -&gt; subscribed</strong>       : charge after trial is successful</li>
+<li><strong>subscribed -&gt; ended</strong>       : user stop renewing (cancel) during subscription period, it will stop at the end of the period</li>
+<li><strong>subscribed -&gt; grace</strong>       : the first renewal charge after the subscription period end fails, user go into grace</li>
+<li><strong>subscribed -&gt; subscribed</strong>  : this is a successful renewal</li>
+<li><strong>grace -&gt; ended</strong>            : user can also cancel while they are in grace period</li>
+<li><strong>grace -&gt; grace</strong>            : grace period consists of a number of days, each day, the <code>expiryTimeMillis</code> is extended by 1 day</li>
+<li><strong>grace -&gt; subscribed</strong>       : charing problem fixed, user move a subscription period starting from the first failed renewal</li>
+</ul>
+
+<p>An example life cycle is sampled here:</p>
+
+<p><a href="#" data-featherlight="/assets/images/2016-05-22-building_cross_platform_subscription_sampling_google_sub.png"><img src="/assets/images/2016-05-22-building_cross_platform_subscription_sampling_google_sub.png"/></a></p>
+
+<h2>Sampling accuracy</h2>
+
+<p>By now, keen readers would that there is a problem with this sampling: you only know when
+the subscription change state <strong>after</strong> the fact. Plus, if your sampling frequency is too big, you might
+end up missing out on changes altogether.</p>
+
+<p>For now, we are trying to work with one sample every 12 hour for every active subscription we have.
+Since the smallest interval between changes is 1 day, should be will be sufficient.</p>
+
+<h1>After thoughts</h1>
+
+<p>Using the method of sampling, we built an abstraction on top of Google&rsquo;s subscription engine
+(or a trick to peek into Google&rsquo;s system, depends on how you look). Other part of the unified
+subscription engine can then build on top of this state data of user subscriptions.</p>
+
+<p>However, due to the fact that sampling was used, we can only provide the data to a certain
+accuracy level. My worry is mainly that when other people/systems call this abstraction, they
+would start to mistake the states for <strong>WHAT ACTUALLY HAPPENED</strong>. This would be pretty frustrating
+in debugging, where you based your guessing on inaccurate facts.</p>
+
+<p>Perhaps more observation, as well as periodic evaluation of Google&rsquo;s subscription model is needed
+to keep things going.</p>
+</div>
+							</article>
+						</div>
+					</main>
+				</div>
+				<div class="col-lg-1"></div>
+			</div>
+		</div>
+
+		<footer>
+			<p>Created using <a href="https://minicss.org">minicss</a> and <a href="http://prismjs.com">prism.js</a></p>
+		</footer>
+
+		<script type="text/javascript" src="/assets/js/site.min.js"></script>
+	</body>
+</html>

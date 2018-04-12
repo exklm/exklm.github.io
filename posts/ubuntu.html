@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width,initial-scale=1"/>
+		<title>ubuntu | bitsgofer</title>
+		<link rel="stylesheet" href="/assets/css/mini.min.css"/>
+		<link rel="stylesheet" href="/assets/css/prism.min.css"/>
+	</head>
+	<body>
+		<header class="sticky">
+			<a href="#" class="logo">>_</a>
+			<a href="/"><button>HOME</button></a>
+			<span>|</span>
+			<a href="/about"><button>About</button></a>
+		</header>
+
+
+		<div class="container" style="padding-left: 0.5rem; padding-top: 0.5rem;">
+			<div class="row">
+				<nav class="drawer col-md-4 col-lg-2">
+					<a href="#"><h4 style="margin-left: 0;">Hello, world!</h4></a>
+					<h4 style="margin-left: 0;">Catalog</h4>
+
+					<!--
+					<a href="#">/home/</a>
+					<a href="#" class="sublink-1">small-ideas/</a>
+					<a href="#" class="sublink-1">cs-basics/</a>
+					<a href="#" class="sublink-1">distributed/</a>
+					<a href="#" class="sublink-1">data/</a>
+					<a href="#" class="sublink-1">bookshelf/</a>
+					<a href="#" class="sublink-1">others/</a>
+					</br>
+
+					<a href="#">/opt/</a>
+					<a href="#" class="sublink-1">Golang/</a>
+					<a href="#" class="sublink-1">Kubernetes/</a>
+					<a href="#" class="sublink-1">Beam/</a>
+					<a href="#" class="sublink-1">PostgreSQL/</a>
+					</br>
+					-->
+
+					<a href="#">ls -alF</a>
+				</nav>
+				<div class="col-sm-12 col-md-8 col-lg-9" style="padding-left: 1rem;">
+					<main>
+						<div class="row">
+							<div class="col-sm-12">
+								<a href="#"><h1>ubuntu</h1></a>
+								<p>Modified: 2018-04-05T16:27:34Z</p>
+							</div>
+						</div>
+						<div class="row">
+							<article>
+								<div><hr />
+
+<p>title:  &ldquo;Install Qualcomm E2400 Ethernet on Ubuntu&rdquo;
+date:   2016-04-20 00:00:00</p>
+
+<h2>description: Modify Qualcomm Atheros alx driver to recognize E2400 chip</h2>
+
+<p>A recent updated screwed over some driver and make my Ethernet device unrecognizable on
+Ubuntu 14.04. After some googling and helped from a colleagues,
+I got it fixed by patching the driver :)</p>
+
+<p>Below are the steps, plus some explanation of what it does so new Ubuntu/Linux
+users can get started.</p>
+
+<h2>The issue</h2>
+
+<p>The Ethernet adapter (Qualcomm E2400) is attached to the mainboard, and it was not recognized by
+Ubuntu only.</p>
+
+<p>A quick call to <code>lspci -k</code> shows this</p>
+
+<p>{% highlight bash %}
+03:00.0 Ethernet controller: Qualcomm Atheros Device e0a1 (rev 10)
+        Subsystem: Micro-Star International Co., Ltd. [MSI] Device 7976
+{% endhighlight %}</p>
+
+<p>There is no <code>Kernel driver in use:</code>. This means that Ubuntu itself wasn&rsquo;t able
+to find and load a driver for it.</p>
+
+<p>Checking only, it seems that E2400 use the <code>alx</code> driver, but the driver doesn&rsquo;t seem to recognize
+the device code. So people recommend to patch the driver</p>
+
+<h2>Driver patching</h2>
+
+<blockquote>
+<p><a href="http://www.linuxfoundation.org/collaborate/workgroups/networking/alx">alx driver</a></p>
+
+<p>The manufacter seems have provided the instruction on
+<a href="http://www.killernetworking.com/support/knowledge-base/17-linux/21-killer-e2400-in-linux-ubuntu-debian">killer ethernet support page</a></p>
+</blockquote>
+
+<p>The Killer E2400 has been confirmed to work fully by modifying and loading the alx driver
+in Ubuntu 14.04 and 15.04.
+These changes have been upstreamed and should work natively in future Linux kernels.</p>
+
+<blockquote>
+<p>So the first step is getting the driver source, which has already been included in the Linux kernel I am using</p>
+</blockquote>
+
+<h3>1. Make sure your complier enviroment is ready.</h3>
+
+<p>{% highlight bash %}
+$ apt-get source linux-image-$(uname -r)
+{% endhighlight %}</p>
+
+<p>Alternative: If you do not have an alternative network connection, you can download the linux kernel source manually from Ubuntu&rsquo;s site:</p>
+
+<p><a href="http://packages.ubuntu.com/vivid/kernel/">http://packages.ubuntu.com/vivid/kernel/</a></p>
+
+<p>Download and unpack it.</p>
+
+<p>{% highlight bash %}
+$ cd ~/linux-image-$(uname-r)
+$ make oldconfig
+$ make prepare
+$ make scripts
+$ apt-get install linux-headers-$(uname -r)
+{% endhighlight %}</p>
+
+<h3>2. Prevent the message &ldquo;no symbol version for module_layout&rdquo; when loading the module with insmod or modprobe.</h3>
+
+<p>{% highlight bash %}
+$ cd ~/linux-source
+$ cp -v /usr/src/linux-headers-$(uname -r)/Module.symvers .
+{% endhighlight %}</p>
+
+<h3>3. Make changes to main.c and reg.h files in ./drivers/net/ethernet/atheros/alx :</h3>
+
+<p>{% highlight c %}
+// diff &ndash;git a/main.c.orig b/main.c
+// &mdash; a/main.c.orig
+// +++ b/main.c
+// @@ -1537,6 +1537,7 @@ static const struct pci_device_id alx_pci_tbl[] = {
+        { PCI_VDEVICE(ATTANSIC, ALX_DEV_ID_AR8162),
+          .driver_data = ALX_DEV_QUIRK_MSI_INTX_DISABLE_BUG },
+        { PCI_VDEVICE(ATTANSIC, ALX_DEV_ID_AR8171) },
+        { PCI_VDEVICE(ATTANSIC, ALX_DEV_ID_E2400) },
+        { PCI_VDEVICE(ATTANSIC, ALX_DEV_ID_AR8172) },
+        {}
+};
+{% endhighlight %}</p>
+
+<p>{% highlight bash %}
+diff &ndash;git a/reg.h.orig b/reg.h
+index af006b4..1396483 100644
+&mdash; a/reg.h.orig
++++ b/reg.h
+@@ -39,6 +39,7 @@
+{% endhighlight %}
+{% highlight c %}
+#define ALX_DEV_ID_E2200                                0xe091
+#define ALX_DEV_ID_AR8162                               0x1090
+#define ALX_DEV_ID_AR8171                               0x10A1
+#define ALX_DEV_ID_E2400                                0xe0A1
+#define ALX_DEV_ID_AR8172                               0x10A0</p>
+
+<p>/* rev definition,
+{% endhighlight %}</p>
+
+<h3>4. Build and install module</h3>
+
+<p>{% highlight bash %}
+$ cd drivers/net/ethernet/alx
+$ make -C /lib/modules/$(uname -r)/build M=$(pwd) modules
+$ make -C /lib/modules/$(uname -r)/build M=$(pwd) modules_install
+$ modprobe -r alx
+$ depmod
+$ modprobe -v alx
+{% endhighlight %}</p>
+
+<blockquote>
+<p>One interesting thing here is that my desktop seems to put the driver into <code>/lib/modules/3.19.0-58-generic/extra</code>, instead of going to <code>/lib/modules/3.19.0-58-generic/kernel/drivers/net/ethernet/atheros/alx/alx.lo</code></p>
+
+<p>So I forced copy it instead</p>
+</blockquote>
+
+<p>After that, all is good :)</p>
+</div>
+							</article>
+						</div>
+					</main>
+				</div>
+				<div class="col-lg-1"></div>
+			</div>
+		</div>
+
+		<footer>
+			<p>Created using <a href="https://minicss.org">minicss</a> and <a href="http://prismjs.com">prism.js</a></p>
+		</footer>
+
+		<script type="text/javascript" src="/assets/js/site.min.js"></script>
+	</body>
+</html>
